@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html>
+
+<style>
+  .graph {
+    width: 100%;
+    /* takes the 100 % width of its container (.box div)*/
+    height: auto;
+    /* takes the 100 % height of its container (.box div)*/
+  }
+
+  .blinkingCursor {
+    height: 1px;
+    padding-top: 5px;
+    width: 20px;
+    background-color: white;
+    display: inline-block;
+    animation-name: blinking;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+  }
+
+  @keyframes blinking {
+    0% {
+      opacity: 0;
+      box-shadow: 0 0 0 0 white;
+    }
+
+    39% {
+      opacity: 0;
+      box-shadow: 0 0 2px 2px white;
+    }
+
+    40% {
+      opacity: 1;
+      box-shadow: 0 0 2px 2px white;
+    }
+
+    50% {
+      opacity: 1;
+      box-shadow: 0 0 0 0 white;
+    }
+
+    89% {
+      opacity: 1;
+      box-shadow: 0 0 0 0 white;
+    }
+
+    90% {
+      opacity: 0.5;
+      box-shadow: 0 0 0 0 white;
+    }
+
+    100% {
+      opacity: 0;
+      box-shadow: 0 0 0 0 white;
+    }
+  }
+
+  body {
+    transition: background-color 0.4s ease;
+  }
+
+  .lightswitch {
+    margin-top: 5px;
+    position: relative;
+    display: inline-block;
+    width: 35px;
+    height: 60px;
+  }
+
+  .lightswitch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .lever {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+
+  .lever:before {
+    position: absolute;
+    content: "ON";
+    font-family: monospace;
+    text-align: center;
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    top: 4px;
+    background-color: #f1f1f1;
+    color: black;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+
+  input:checked+.lever {
+    background-color: #1b1a1c;
+  }
+
+  input:focus+.lever {
+    box-shadow: 0 0 1px #2196F3;
+  }
+
+  input:checked+.lever:before {
+    -webkit-transform: translateY(26px);
+    -ms-transform: translateY(26px);
+    transform: translateY(26px);
+    background-color: #6d6b77;
+    color: white;
+    content: "OFF";
+  }
+
+  .darkmode {
+    background-color: black;
+    color: white;
+    transition: background-color 0.4s ease;
+  }
+  .modal p {
+    color:yellow;
+    
+    font-family:"Comic Sans MS",cursive;
+    font-size:50px
+  }
+</style>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>replit</title>
+  <link href="style.css" rel="stylesheet" type="text/css" />
+</head>
+
+
+
+
+
+<body onload="init()">
+  <!-- Side navigation -->
+
+  <div class="sidebar" id="sidebar">
+    <a href="#intro"> Introduction</a>
+    <a href="#data">Explaining The Data</a>
+    <a href="#graphs">Graphs</a>
+    <a href="#aimodels">AI Models</a>
+    <a href="#whymade">Why We Made This</a>
+    <a href="#resultsandconcl">Results and Final Conclusions</a>
+    <a href="#whatnow">What Now?</a>
+    <a href="#aboutteam">About The Team</a>
+    <span style="display: block; padding:16px; content-align: center;">
+      <p style="opacity:50%; cursor: help;" onclick="openmodal()">Lightswitch</p>
+      <label class="lightswitch" onclick="checkboxfunc()">
+        <input type="checkbox" id="lightswitch">
+        <span class="lever"></span>
+      </label>
+    </span>
+  </div>
+
+  <!-- Page content -->
+  <div class="content">
+    <h1 id="intro" ,, style="display:inline-block;">
+      <img src="assets/nba stylized logo.png" width="25" height="43" />
+      Introduction<div class="blinkingCursor"> </div>
+    </h1>
+    <p>What's this you stumbled on? It is the results of a project created by AI Camp students meant to analyze the data
+      on NBA teams to predict a winner when two compete. Look through this website to understand the types of analysis
+      that was needed to finish this project, and to learn more about the results obtained.</p>
+
+
+
+    <h1 id="data" , style="display:inline-block;">
+      <img src="assets/nba stylized logo.png" width="25" height="43" />
+      Explaining The Data
+      <div class="blinkingCursor"></div>
+    </h1>
+    <p>We used a combination of 2022-23 team statistic data directly from nba.com as well as 2022-23 matchup data from
+      basketball-reference.com. These datasets were combined so team statistic data for each team in a given match could
+      be used to determine the outcome of that matchup.
+      These are both links to
+      the websites where we pulled our data from:
+    </p>
+    <p>https://www.basketball-reference.com/leagues/NBA_2023_games.html
+    </p>
+    <p>
+      https://www.nba.com/stats/teams/advanced?PerMode=Totals&SeasonType=Regular+Season
+    </p>
+    <break>
+
+      <p>Our target variable was the outcome of each match. We want to be able to predict which team would be more likely to win a
+        given match
+        with a reasonable confidence level.</p>
+      <break>
+        <h3><b>Team Statistics Key:</b></h3>
+        <p>PIE: Player Impact Factor (roughly measures a players impact on the games they play in)</p>
+        <p>TS%: True Shooting Percentage</p>
+        <p>FG%: Field Goals Total Percentage</p>
+        <p>TOV%: Turn Over Percentage</p>
+        <p>REB%: Rebound Percentage</p>
+        <p>DREB%: Defensive Rebounds Percentage</p>
+        <p>OREB%: Offensive Rebounds Percentage</p>
+        <p>AST: Assist</p>
+        <p>AST/TO: Assist To Turnovers</p>
+        <p>AST%: Assist Percentage</p>
+        <p>NetRtg: Net Rating (typically measured by OffRtg-DefRtg)</p>
+        <p>DefRtg: Defense Rating</p>
+        <p>OffRtg: Offense Rating</p>
+        <p>MIN: Average Minutes Per Game
+        </p>
+
+        <h1 id="graphs" , style="display:inline-block;">
+          <img src="assets/nba stylized logo.png" width="25" height="43" />
+          Graphs<div class="blinkingCursor"></div>
+        </h1>
+        <h2><b>Teams and Total Wins Bar Graph</b></h2>
+        <img src="assets/bar graph.png" class="graph">
+        <iframe src="bar graph.html"></iframe>
+        <p>This bar graph demonstrates the total wins per each NBA team. It is organized from most wins to least.</p>
+
+        <h2><b>Heatmap</b></h2>
+        <iframe width=1000 height=1000 src="heatmapplottly.html"></iframe>
+        <!--<img src="assets/NBA Heatmap.png" class="graph"-->
+
+        <p>This heat map represents the relationship between the visitor and home teams, specifically how any two
+          variables between the home and visitor teams are correlated. It uses the correlation coefficient (a
+          numerical
+          measure of some type of statistical relationship between two vairables) to measure this. This helps us
+          <b>identify what factors contribute to a winning team.</b>
+        </p>
+        <break>
+          <p>To accurately predict which NBA team will win based on the given variables, we must first <b>look at
+              which
+              variables are correlated with visitor wins </b>(when the visiting team wins and the home team loses).
+            When
+            looking at the heatmap, it was found that a given team's total wins and a team's offensive rating are
+            positively correlated with a correlation coefficient of 0.79. On the other hand, the a team's total wins
+            and a
+            team's defensive rating are negatively correlated with a correlation coefficient of -0.79. This means that
+            <b>the better a given team's offense is, the greater their total wins.</b> However, our target variable,
+            VisitorWin, was not highly correlated with any of our features. H_Total_Wins and H_Total_Losses were
+            correlated with VistorWin with the coefficents -0.12 and 0.12 respectively. This means, <b>given a matchup
+              of two teams, if one team has more total wins, the other team is less likely to win the individual
+              game.</b> The opposite is also true. However, even these relationships
+            are relatively small. <b>The small relationship between our target variable and features may make
+              classifcation difficult or inaccurate.</b>
+          </p>
+        </break>
+
+
+
+<html>
+<head>
+  <style>
+    .graph {
+      width: 600px; /* Adjust the size of the images as needed */
+      height: 400px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Histograms</h2>
+  <img id="image" src="assets/click here.png" alt="home defensive rating" class="graph" onclick="changeImage()">
+  <script>
+    var images = [
+      "assets/HDFR.png",
+      "assets/visitor net rating histogram.png",
+      "assets/VEF.png",
+      "assets/visitor assists to turnovers histogram.png",
+      "assets/True_Shooting.png",
+      "assets/home total losses histogram.png"
+    ];
+    
+    var currentIndex = 0;
+    var imageElement = document.getElementById("image");
+    
+    function changeImage() {
+      currentIndex = (currentIndex + 1) % images.length;
+      imageElement.src = images[currentIndex];
+    }
+  </script>
+</body>
+</html>
+        <p>Constructs a histogram that <b>compares the statistics of teams that won and loss different games,</b>
+          along
+          with calculating the mean for winning and losing teams and graphing it onto the histograms. Graphing the
+          data in
+          this way allows us to see which statistics have significant differences between teams that win and teams
+          that
+          lose. These are some of the histograms with the largest differences. <b>Since the differences between the
+            two
+            sets are small and minor, the data shows that nba games are very random and that all the teams have
+            similar
+            levels of skills</b>, with minor differences and events that account for winning and losing</p>
+
+        <h1 id="aimodels" ,, style="display:inline-block;">
+          <img src="assets/nba stylized logo.png" width="25" height="43" />
+          AI Models<div class="blinkingCursor"> </div>
+        </h1>
+        <h2><b>KNN</b></h2>
+        <img src="https://miro.medium.com/v2/resize:fit:2224/1*jyZpd_nenl5vPfCEgZtEiw.png" class="graph">
+        <p> Score: 0.6913439635535308 <br>
+          Accuracy: 0.55 </p>
+        <p>KNN stands for <b>K nearest neighbor</b>. How it works is based on one data point the algorithm will find
+          other
+          point's near it (in other word's its neighbors). We chose <b>a K value to determine how many points nearest
+            it
+            to use</b>. For example, if we set k to 3, it will chose the 3 closest data points and then <b>averages
+            out to
+            make a predicted classification</b>. For our set of data we used grid search to find out that 6 is the
+          best k
+          for us. The two numbers displayed are the score and accuracy results we got. <b>The score is how well our
+            trained data fit our test data. Accuracy is how precise we were.</b> Our results are lower than we hoped
+          but
+          it is still impressive based on the fact NBA data is always changing.</b> </p>
+
+        <script src="script.js"></script>
+
+
+        <h2>Random Forests</h2>
+        <img
+          src="https://www.ibm.com/content/dam/connectedassets-adobe-cms/worldwide-content/cdp/cf/ul/g/50/f9/ICLH_Diagram_Batch_03_27-RandomForest.component.xl.ts=1679336476850.png/content/adobe-cms/us/en/topics/random-forest/jcr:content/root/table_of_contents/body/simple_narrative/image"
+          class="graph">
+        <p>Score: 0.8280182232346242<br>
+          Accuracy: 0.5454545454545454</p>
+        <p>Random Forests are just one of many ways to get a desired result. It works by using <b>a common algorithm
+            that
+            involves multiple branches</b> and the <b>process of elimination</b> to get to its ultimate conclusion.
+          For
+          example, some of the correlations within our data were a <b>strong positive correlation to offense</b> and a
+          <b>strong negative correlation to defense</b>. If Team A is better at offense while Team B is better at
+          defense,
+          then we would be quite confident that Team A would win. <b>Random Forests fit well with our data</b> because
+          of
+          the max_features capabilities (specifically max_depth), and in the end it gave the <b>highest score</b> out
+          of
+          all three models we tested.
+        </p>
+
+        <h2>Neural Network</h2>
+        <img src="https://miro.medium.com/v2/resize:fit:2636/1*3fA77_mLNiJTSgZFhYnU0Q.png" class="graph">
+        <p>Score: 0.48519362186788156<br>
+          Accuracy: 0.4590909090909091</p>
+        <p>Neural networks work somewhat like a set of neurons in a brain. Each artificial <b>"neuron"</b> is
+          connected to
+          other neurons around it through <b>edges</b>. The strength of each one can be changed with each iteration
+          through its <b>weight</b>, and it "learns" by adjusting the strength of individual neurons until it can
+          provide
+          an optimal result. Surprisingly, this wasn't a good option for our dataset. We arsume that our dataset
+          wasn't
+          correlated enough to draw proper conclusions, as basketball games tend to be volatile and random.</p>
+        <!--
+  This script places a badge on your repl's full-browser view back to your repl's cover
+  page. Try various colors for the theme: dark, light, red, orange, yellow, lime, green,
+  teal, blue, blurple, magenta, pink!
+  -->
+        <h1 id="whymade" , style="display:inline-block;">
+          <img src="assets/nba stylized logo.png" width="25" height="43" />
+          Why We Made This<div class="blinkingCursor">
+          </div>
+        </h1>
+        <p>Our focus was on NBA games and creating a website that could predict which team would win. Some of the team
+          liked basketball while others didn't know much about basketball but we were able to overcome that. Everyone in
+          our team wanted to learn more about data science and AI, so this project was a great way for us to get
+          accomplish that while creating a fun outcome. We also, made this as a way to add a cool project to put in our
+          future portfolios. </p>
+
+        <h1 id="resultsandconcl" ,, style="display:inline-block;">
+          <img src="assets/nba stylized logo.png" width="25" height="43" />
+          Results and Final Conclusions<div class="blinkingCursor"></div>
+        </h1>
+        <p>Overall, for our AI Models the score and accuracy rates are lower than desired. This is because NBA data is
+          always
+          changing. Also, some of the data such as net rating can also be objective. While the overall desired accuracy
+          could be higher, our accuracy was impressive given our circumstances. Despite how relatively random NBA games
+          are,
+          it was remarkable that we were able to find as much noticable correlation in the data as we did.
+        <h1 id="whatnow" , style="display:inline-block;">
+          <img src="assets/nba stylized logo.png" width="25" height="43" />
+          What Now?<div class="blinkingCursor"></div>
+        </h1>
+        <!--this is for the 'extentions to the project' section -->
+        <p> As we've discussed before, the confidence at which we can predict which team will win in a NBA match is not
+          as high as we would like it to be. Because of this, we wish to improve our data and recognize more
+          correlations. In the future, we hope to improve our data by using more datasets that are relevant to the
+          issue. While we cannot guarantee the improvement of said data and correlations, we will continue to update our
+          data. Here's to hoping that NBA games are not as random in the future!</p>
+        <h1 id="aboutteam" , style="display:inline-block;">
+          <img src="assets/nba stylized logo.png" width="25" height="43" />About The Team<div class="blinkingCursor">
+          </div>
+        </h1>
+        <h2>Saanvi Ibrahimpatnam </h2>
+        <p> Hi! My name is Saanvi and I am a rising senior at Fishers High School. I have gained a keen interest about
+          technology and its futuristic application over the past few years and joined AI camp to learn more! This camp
+          has taught me so much from more about machine learning to teamwork! In the future I plan on working with
+          cybersecurity as well as broaden my knowledge about computer science as a whole. </p>
+        <img src="assets/saanviimg.png" width="270" height="200>
+        <h2>Muhammad Atif</h2>
+        <p>Hi, I am about to be a senior in highschool. I did this camp in order to learn whether or not coding and AI
+          is something I want to pursue in the future. This camp was awesome for a first experience and I had a great
+          time working with my team and our instructor!</p>
+        <img src="">
+        <h2>Sahistha Shakya</h2>
+        <p>Hi there! My name is Sahistha and I am an incoming senior. I have always had an interest for coding and I
+          joined AI Camp to experience it first hand. In the future I hope to work in a career invloving computer
+          science. Through this camp I have learned so much and made some friends along the way. It is incredible how
+          much we were able to accomplish in a short time with the help of our amazing instructor, Serena.
+        </p>
+        <img src="">
+        <h2>Austin Allen</h2>
+        <p>Hey, I'm Austin and I'm going to be going into my senior year of high school. I did this camp because
+          programming is soemthing I have done for years and I was at least a little bit interested in AI when I heard
+          about it. It's been a while since I've learned anything new with programming, so this was a fun experience for
+          me!</p>
+        <img src="">
+        <h2>Lucia Vargas</h2>
+        <p>Hello, I'm Lucia! I graduated high school about a month ago, and I've learned so much from this experience.
+          I'm truly grateful to have had such an amazing team and incredible support when it came to coding in Python
+          and HTML, and I can't wait to continue coding when I'm an engineering major in the fall! :D</p>
+        <img src="">
+        <h2>Hayden Glass</h2>
+        <img src=" assets/IMG_7532.jpg" width="200" height="200">
+        <p>Hello, I'm Hayden. I joined this camp to gain more coding experience and in order to understand how AI works.
+          I have been interested in art since I was very little, so seeing AI threaten that passion of mine drew me in.
+          Now I hope to make sure AI is used fairly and that regulations can be in place using what I learned at AI
+          Camp.</p>
+
+  </div>
+
+  <script src="https://replit.com/public/js/replit-badge-v2.js" theme="dark" position="bottom-right">
+  </script>
+  <div id="myModal" class="modal">
+
+    <!-- Modal content -->
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <p>graphic design is my passion... -austin</p>
+    </div>
+  </div>
+</body>
+<script>
+  window.addEventListener("DOMContentLoaded", (event) => {
+    var checkbox = document.getElementById("lightswitch")
+    var sidebar = document.getElementById("sidebar")
+    if (localStorage.getItem('isDarkMode') === 'true') {
+      document.body.classList.add("darkmode");
+      sidebar.classList.add("dark")
+      checkbox.checked = true
+    }
+    else {
+      document.body.classList.remove("darkmode")
+      sidebar.classList.remove("dark")
+      checkbox.checked = false
+    }
+  });
+  function init() {
+
+  }
+
+  function checkboxfunc() {
+    var checkbox = document.getElementById("lightswitch")
+    var sidebar = document.getElementById("sidebar")
+
+
+    if (checkbox.checked == true) {
+      document.body.classList.add("darkmode");
+      sidebar.classList.add("dark")
+      localStorage.setItem('isDarkMode', true);
+    }
+    else {
+      document.body.classList.remove("darkmode")
+      sidebar.classList.remove("dark")
+      localStorage.setItem('isDarkMode', false);
+    }
+    console.log("hello world")
+  }
+  var modal = document.getElementById("myModal")
+  var btn = document.getElementById("switchLabel");
+
+  // Get the <span> element that closes the modal
+  var span = document.getElementsByClassName("close")[0];
+
+  // When the user clicks the button, open the modal 
+  function openmodal() {
+    modal.style.display = "block";
+  }
+
+  // When the user clicks on <span> (x), close the modal
+  span.onclick = function () {
+    modal.style.display = "none";
+  }
+
+  // When the user clicks anywhere outside of the modal, close it
+  window.onclick = function (event) {
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+  }
+</script>
+
+</html>
